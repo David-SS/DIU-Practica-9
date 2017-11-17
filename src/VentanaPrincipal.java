@@ -2,8 +2,6 @@
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -17,14 +15,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public VentanaPrincipal() {
         this.connection = null;
         this.tableModel = new DefaultListModel();
-        this.fieldModel = new DefaultListModel();       
-        
+        this.fieldModel = new DefaultListModel();     
         initComponents();
-        
-        showComponents(false);
-        multipleRangeMode.setSelected(true);
-        tableList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        fieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);       
+        resetComponents();
     }
 
     /**
@@ -65,6 +58,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         userLabel.setText("Usuario:");
 
         passLabel.setText("Contraseña: ");
+
+        userTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                userTextFieldActionPerformed(evt);
+            }
+        });
+
+        passwordField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordFieldActionPerformed(evt);
+            }
+        });
 
         logoutButton.setText("Desconectar");
         logoutButton.addActionListener(new java.awt.event.ActionListener() {
@@ -272,61 +277,62 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        this.connection = new ConnectionJDBC(
-                userTextField.getText(), 
-                String.valueOf(passwordField.getPassword()));
-        /*try {     
-            this.connection.connect();
-        } catch (ClassNotFoundException | SQLException ex) {
-            showDatabaseConnetionError();
-        }*/ 
-        addTables();
+        connectAndShow();
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        showComponents(false);
-        this.connection = null;
-        this.multipleRangeMode.setSelected(true);
-        this.tableList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        this.tableModel.removeAllElements();
-        this.fieldModel.removeAllElements();
-        this.selectionModeGroup.clearSelection();        
+        resetComponents();
         try {
             connection.disconnect();
+            this.connection = null;
         } catch (SQLException ex) {
             showDatabaseConnetionError();
-        }
+        }        
     }//GEN-LAST:event_logoutButtonActionPerformed
 
     private void simpleModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpleModeActionPerformed
         tableList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tableList.clearSelection();
-        fieldList.clearSelection();
-        addFields();
+        refreshSelectionMode();
     }//GEN-LAST:event_simpleModeActionPerformed
 
     private void rangeModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rangeModeActionPerformed
         tableList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        tableList.clearSelection();
-        fieldList.clearSelection();
-        addFields();
+        refreshSelectionMode();
     }//GEN-LAST:event_rangeModeActionPerformed
 
     private void multipleRangeModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multipleRangeModeActionPerformed
         tableList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        tableList.clearSelection();
-        fieldList.clearSelection();
-        addFields();
+        refreshSelectionMode();
     }//GEN-LAST:event_multipleRangeModeActionPerformed
 
     private void cleanSelectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanSelectionButtonActionPerformed
-        tableList.clearSelection();
-        fieldList.clearSelection();
+        refreshSelectionMode();
     }//GEN-LAST:event_cleanSelectionButtonActionPerformed
 
     private void tableListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_tableListValueChanged
         if (!evt.getValueIsAdjusting()) addFields();
     }//GEN-LAST:event_tableListValueChanged
+
+    private void userTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userTextFieldActionPerformed
+        connectAndShow();
+    }//GEN-LAST:event_userTextFieldActionPerformed
+
+    private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
+        connectAndShow();
+    }//GEN-LAST:event_passwordFieldActionPerformed
+    
+    private void connectAndShow() {
+        this.connection = new ConnectionJDBC(
+                userTextField.getText(), 
+                String.valueOf(passwordField.getPassword()));
+        try {     
+            this.connection.connect();
+            tableModel.removeAllElements();
+            addTables();
+        } catch (ClassNotFoundException | SQLException ex) {
+            showDatabaseConnetionError();
+        } 
+    }
     
     private void addTables() {
         List<String> tables = new ArrayList<>();
@@ -355,7 +361,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }
     
+    private void resetComponents() {
+        showComponents(false);
+        this.multipleRangeMode.setSelected(true);
+        this.tableList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        this.fieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);        
+        this.tableModel.removeAllElements();
+        this.fieldModel.removeAllElements();
+    }
+    
+    private void refreshSelectionMode() {
+        tableList.clearSelection();
+        fieldList.clearSelection();
+        addFields();
+    }
+    
     private void showComponents(boolean state) {
+        loginButton.setEnabled(!state);
+        logoutButton.setEnabled(state);
         selectionModePanel.setVisible(state);
         selectionOptionsPanel.setVisible(state);
         DBPanel.setVisible(state);
