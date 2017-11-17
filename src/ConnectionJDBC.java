@@ -11,10 +11,8 @@ public class ConnectionJDBC {
     public ConnectionJDBC(String user, String password) {        
         this.server = "mozart.dis.ulpgc.es";
         this.DBName = "PracticaDIU";   
-        //this.user = user;
-        //this.password = password;
-        this.user = "estudiante-DIU";
-        this.password = "diU-17-18";
+        this.user = user;
+        this.password = password;
     }
 
     
@@ -50,29 +48,5 @@ public class ConnectionJDBC {
         }
         return fields;
     }
-    
-    /*    METODO ORIGINAL
-    
-    public void connect() throws ClassNotFoundException, SQLException {
-        
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql://" + 
-                this.server + "/" + this.DBName + "?useSSL=true",
-                this.user,
-                this.password);
-        DatabaseMetaData md = con.getMetaData();
-        String[] types = {"TABLE"};
-        ResultSet rs = md.getTables(null, null, "%", types);
-        while(rs.next()){
-                String nombreTabla = rs.getString("TABLE_NAME");
-                System.out.println("Tabla: " + nombreTabla);
-                ResultSet rs2 = md.getColumns(null, null, nombreTabla, null);
-                while (rs2.next()) {
-                    String nombreCampo = rs2.getString("COLUMN_NAME");
-                    System.out.println("   Campo: " + nombreCampo);
-                }
-        }
-        con.close();
-    }*/
 }
 

@@ -280,6 +280,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         connectAndShow();
     }//GEN-LAST:event_loginButtonActionPerformed
 
+    private void userTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userTextFieldActionPerformed
+        connectAndShow();
+    }//GEN-LAST:event_userTextFieldActionPerformed
+
+    private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
+        connectAndShow();
+    }//GEN-LAST:event_passwordFieldActionPerformed
+    
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         resetComponents();
         try {
@@ -313,14 +321,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         if (!evt.getValueIsAdjusting()) addFields();
     }//GEN-LAST:event_tableListValueChanged
 
-    private void userTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userTextFieldActionPerformed
-        connectAndShow();
-    }//GEN-LAST:event_userTextFieldActionPerformed
-
-    private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
-        connectAndShow();
-    }//GEN-LAST:event_passwordFieldActionPerformed
-    
     private void connectAndShow() {
         this.connection = new ConnectionJDBC(
                 userTextField.getText(), 
@@ -370,18 +370,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         this.fieldModel.removeAllElements();
     }
     
-    private void refreshSelectionMode() {
-        tableList.clearSelection();
-        fieldList.clearSelection();
-        addFields();
-    }
-    
     private void showComponents(boolean state) {
+        userTextField.setEditable(!state);
+        passwordField.setEditable(!state);
         loginButton.setEnabled(!state);
         logoutButton.setEnabled(state);
         selectionModePanel.setVisible(state);
         selectionOptionsPanel.setVisible(state);
         DBPanel.setVisible(state);
+    }
+    
+    private void refreshSelectionMode() {
+        tableList.clearSelection();
+        fieldList.clearSelection();
+        addFields();
     }
     
     private void showDatabaseConnetionError() {
