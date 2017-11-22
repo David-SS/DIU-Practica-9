@@ -18,6 +18,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         this.fieldModel = new DefaultListModel();     
         initComponents();
         resetComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -51,6 +52,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         autores = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Visualizador de Bases de Datos");
 
         loginPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Inicio"));
         loginPanel.setToolTipText("");
@@ -368,6 +370,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         this.fieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);        
         this.tableModel.removeAllElements();
         this.fieldModel.removeAllElements();
+        this.userTextField.setText("");
+        this.passwordField.setText("");
     }
     
     private void showComponents(boolean state) {
@@ -389,14 +393,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void showDatabaseConnetionError() {
         JOptionPane.showMessageDialog(rootPane,
             "Error al conectar con la base de datos.\nPor favor, revise que ha"
-                    + "introducido el usuario y la contraseña correctos.", 
+                    + " introducido el usuario y la contraseña correctos.", 
             "Error al conectar con la base de datos", 
             JOptionPane.ERROR_MESSAGE);
     }
     
     private void showDatabaseError() {
         JOptionPane.showMessageDialog(rootPane,
-            "Error al obtener información de la base de datos.\nPor favor,"
+            "Error al obtener información de la base de datos.\nPor favor, "
                     + "inténtelo de nuevo.", 
             "Error al consultar la base de datos", 
             JOptionPane.ERROR_MESSAGE);
